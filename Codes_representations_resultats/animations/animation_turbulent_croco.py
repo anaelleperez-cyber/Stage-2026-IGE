@@ -27,9 +27,7 @@ pas_animation = 5   # 1 tous les 5 jours
 
 os.makedirs(figures, exist_ok=True)
 
-# ---------------------------------------------------------------
-# GRILLE
-# ---------------------------------------------------------------
+# Grille
 g = xr.open_dataset(grid)
 lon = g['lon_rho'].values
 lat = g['lat_rho'].values
@@ -47,9 +45,7 @@ pm_c = pm[:-1, :-1]
 pn_c = pn[:-1, :-1]
 angle_c = angle[:-1, :-1]
 
-# ---------------------------------------------------------------
-# DONNEES
-# ---------------------------------------------------------------
+# Données
 d = xr.open_dataset(os.path.join(simu, file))
 u_full = d.u[:, -1, :, :]
 v_full = d.v[:, -1, :, :]
@@ -69,9 +65,7 @@ n_days = len(time)
 indices_a_animer = list(range(0, n_days, pas_animation))
 print(f"{len(indices_a_animer)} images dans l'animation (1 tous les {pas_animation} jours).")
 
-# ---------------------------------------------------------------
-# MOYENNE ANNUELLE (baseline), calculee UNE SEULE FOIS, hors boucle
-# ---------------------------------------------------------------
+# Moyenne annuelle
 u_yr = u_full.mean(dim='time').values
 v_yr = v_full.mean(dim='time').values
 w_yr = w_full.mean(dim='time').values
@@ -106,9 +100,8 @@ def calculer_champs_turbulents(t):
     return velocity_t, vorticity_t, EKE
 
 
-# ---------------------------------------------------------------
-# FIGURE DE BASE
-# ---------------------------------------------------------------
+# Figure de base
+
 fig, axs = plt.subplots(1, 3, figsize=figsize, subplot_kw={'projection': ccrs.PlateCarree()})
 titre = fig.suptitle("")
 
@@ -155,9 +148,7 @@ fig.tight_layout()
 artistes_a_effacer = [pcm_v, pcm_vort, pcm_eke]
 
 
-# ---------------------------------------------------------------
-# FONCTION APPELEE POUR CHAQUE FRAME
-# ---------------------------------------------------------------
+# Fonction pour chaque frame
 def mettre_a_jour(t):
     global pcm_v, pcm_vort, pcm_eke, artistes_a_effacer
 
@@ -179,9 +170,7 @@ def mettre_a_jour(t):
     return pcm_v, pcm_vort, pcm_eke
 
 
-# ---------------------------------------------------------------
-# ANIMATION
-# ---------------------------------------------------------------
+# Animation 
 anim = animation.FuncAnimation(
     fig, mettre_a_jour, frames=indices_a_animer,
     interval=200, blit=False
