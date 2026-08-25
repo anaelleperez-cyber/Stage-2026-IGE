@@ -1,9 +1,8 @@
+#Pour une rivière/un fleuve donné, code qui permet de lister les n points à l'interface terre-mer les plus proches de l'embouchure 
+
 import csv
 import numpy as np
 
-# ---------------------------------------------------------------
-# PARAMETRES
-# ---------------------------------------------------------------
 input_csv = '/lus/home/CT1/c1601279/aperez/SCRIPTS_ANAELLE/psource_candidates.csv'
 
 # Coordonnees approximatives de l'embouchure de la riviere
@@ -15,9 +14,8 @@ search_radius_deg = 0.5
 
 n_closest = 4 # nombre de points les plus proches a afficher
 
-# ---------------------------------------------------------------
-# LECTURE DU CSV
-# ---------------------------------------------------------------
+# Lecture du CSV 
+
 candidates = []
 with open(input_csv, newline='') as f:
     reader = csv.DictReader(f)
@@ -31,31 +29,22 @@ with open(input_csv, newline='') as f:
 
 print(f"{len(candidates)} points charges depuis {input_csv}")
 
-# ---------------------------------------------------------------
-# CALCUL DE LA DISTANCE 
-# ---------------------------------------------------------------
+# Calcul de la distance à l'embouchure 
 for c in candidates:
     dlon = c['lon'] - lon
     dlat = c['lat'] - lat
     c['distance_deg'] = np.sqrt(dlon**2 + dlat**2)
 
-# ---------------------------------------------------------------
-# FILTRAGE : ne garder que les points dans le rayon de recherche
-# ---------------------------------------------------------------
+# filtrage : ne garder que les points dans le rayon de recherche
 near_river = [c for c in candidates if c['distance_deg'] <= search_radius_deg]
 
 print(f"{len(near_river)} points trouves dans un rayon de {search_radius_deg} degre "
       f"autour de l'embouchure de la riviere ({lon}, {lat}).")
 
-# ---------------------------------------------------------------
-# TRI PAR DISTANCE CROISSANTE (le plus proche en premier)
-# ---------------------------------------------------------------
+# Tri par distante croissante (le plus proche en premier)
 near_river.sort(key=lambda c: c['distance_deg'])
 
-
-# ---------------------------------------------------------------
-# AFFICHAGE DES N PLUS PROCHES
-# ---------------------------------------------------------------
+# Affichage des n plus proches
 print(f"\nLes {min(n_closest, len(near_river))} points les plus proches :")
 print(f"{'Isrc':>6} {'Jsrc':>6} {'Dsrc':>6} {'lon':>10} {'lat':>10} {'dist(deg)':>10}  cote terre") #en-tete du tableau
 
