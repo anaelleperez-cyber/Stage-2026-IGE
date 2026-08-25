@@ -1,3 +1,5 @@
+# Code qui permet de sortir une liste CSV (utilisée dans le code river_psource.py) de tous les points de grille à l'interface terre-mer
+
 import xarray as xr
 import numpy as np
 import csv
