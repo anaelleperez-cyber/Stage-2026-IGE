@@ -68,19 +68,8 @@ print(f"Vorticite anomale - min: {np.nanmin(vorticite_anomalie):.3e} s^-1, "
       f"max: {np.nanmax(vorticite_anomalie):.3e} s^-1")
 print(f"Vorticite anomale - moyenne |.|: {np.nanmean(np.abs(vorticite_anomalie)):.3e} s^-1")
 
-# ---------------------------------------------------------------
-# EMPREINTE SPATIALE : surface ou |vorticite| depasse le seuil
-# ---------------------------------------------------------------
-cell_area_km2 = 1.0 / (pm_c * pn_c) / 1e6
-masque_perturbation = np.abs(vorticite_anomalie) >= seuil_vorticite
-empreinte_km2 = np.nansum(cell_area_km2[masque_perturbation])
 
-print(f"\nEmpreinte de la perturbation de vorticite (|Δζ| >= {seuil_vorticite:.1e} s^-1) : "
-      f"{empreinte_km2:,.1f} km2")
-
-# ---------------------------------------------------------------
-# FIGURE
-# ---------------------------------------------------------------
+# Figure
 fig, ax = plt.subplots(figsize=(8, 7), subplot_kw={'projection': ccrs.PlateCarree()})
 fig.suptitle(f"CROCO {date} - Anomalie de vorticité de surface")
 
