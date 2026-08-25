@@ -1,40 +1,36 @@
+#Code permettant de tester si les 12 PSOURCES sélectionnés sont effectivement à l'interface terre-mer (double vérification par rapport à psources_candidates.py)
+
 import xarray as xr
 import numpy as np
 
-# ---------------------------------------------------------------
-# PARAMETRES (a adapter) 
-# ---------------------------------------------------------------
 grid_file = '/lus/scratch/CT1/c1601279/aperez/SWIO/test_avec_psource/swiose_grid.nc'
 
 # Points sources a tester : (nom, Isrc, Jsrc, Dsrc)
 sources = [
-        ("Zambeze", 96, 200, 0),
+    ("Zambeze", 96, 200, 0),
     ("Tsiribihinha", 188, 192, 0),
     ("Bestiboka", 208, 240, 1),
     ("Mangoki", 178, 171, 0),
     ("Manambolo", 187, 197, 0),
     ("Mahavy", 238, 272, 1),
     ("Sambriano", 233, 265, 0),
-        ("Limpopo", 70, 119, 1),
+    ("Limpopo", 70, 119, 1),
     ("Save", 83, 173, 0),
     ("Buzi et Pungoe", 79, 185, 0),
     ("Morondova", 186, 184, 0),
     ("Linta", 185, 128, 0)
 ]
 
-# ---------------------------------------------------------------
-# CHARGEMENT DU MASQUE
-# ---------------------------------------------------------------
+# Chargelent du masque
 g = xr.open_dataset(grid_file)
-mask = g['mask_rho'].values   # dimensions (eta_rho, xi_rho) = (J, I)
+mask = g['mask_rho'].values  
 g.close()
 
 print(f"Dimensions de la grille (eta_rho, xi_rho) : {mask.shape}")
 print()
 
-# ---------------------------------------------------------------
-# FONCTION DE VERIFICATION
-# ---------------------------------------------------------------
+# Fonction de vérification 
+
 def check_source(name, Isrc, Jsrc, Dsrc, mask):
     print(f"--- {name} : Isrc={Isrc}, Jsrc={Jsrc}, Dsrc={Dsrc} ---")
 
