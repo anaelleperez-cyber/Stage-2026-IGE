@@ -1,21 +1,18 @@
+# Code pour créer une carte représentant la zone et sa bathymetrie
+
 import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 import os
 
-# ---------------------------------------------------------------
-# CHEMINS
-# ---------------------------------------------------------------
+
 grid = '/lus/store/CT1/c1601279/aperez/resultats/ref_1an_sans_psource/swiose_grid.nc'
 
 SWIO = (25, 69, -36, 7)
 pas_grille = 10           # 1 ligne de grille affichee tous les N points
 
-# ---------------------------------------------------------------
-# CHARGEMENT DE LA GRILLE
-# ---------------------------------------------------------------
-g = xr.open_dataset(grid)
+
 lon = g['lon_rho'].values
 lat = g['lat_rho'].values
 h = g['h'].values           # bathymetrie [m], toujours positive (profondeur)
@@ -25,9 +22,8 @@ g.close()
 # Bathymetrie affichee en negatif (convention -5000 m = fond), terre masquee
 bathy = np.where(mask_rho == 1, -h, np.nan)
 
-# ---------------------------------------------------------------
-# FIGURE
-# ---------------------------------------------------------------
+# Creation de la figure 
+
 fig, ax = plt.subplots(figsize=(9, 8), subplot_kw={'projection': ccrs.PlateCarree()})
 
 ax.set_extent(SWIO)
@@ -47,7 +43,7 @@ cs = ax.contour(lon, lat, bathy, levels=niveaux_isobaths, colors=couleurs_isobat
                   linewidths=0.6, transform=ccrs.PlateCarree(), zorder=2)
 ax.clabel(cs, inline=True, fontsize=7, fmt='%d')
 
-# Lignes de la grille numerique (curviligne), affichees tous les N points
+# Lignes de la grille numerique affichees tous les N points
 lon_grille = lon[::pas_grille, ::pas_grille]
 lat_grille = lat[::pas_grille, ::pas_grille]
 for i in range(lon_grille.shape[0]):
